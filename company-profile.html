@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobSwipe - Company Profile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            color: #333;
+            font-size: 24px;
+        }
+        
+        .logo span {
+            color: #4b6cb7;
+            font-weight: bold;
+        }
+        
+        .employer-badge {
+            background-color: #4b6cb7;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .nav-links a.active {
+            color: #4b6cb7;
+            background-color: rgba(75, 108, 183, 0.1);
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-title {
+            color: #333;
+            font-size: 28px;
+        }
+        
+        .save-btn {
+            background-color: #4b6cb7;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .save-btn:hover {
+            background-color: #3f5ca0;
+        }
+        
+        .profile-section {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .section-header {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .section-header h2 {
+            color: #333;
+            font-size: 20px;
+        }
+        
+        .section-header button {
+            background: none;
+            border: none;
+            color: #4b6cb7;
+            font-size: 15px;
+            cursor: pointer;
+        }
+        
+        .company-logo-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .company-logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            background-color: #f0f0f0;
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 36px;
+            color: #555;
+        }
+        
+        .logo-upload-btn {
+            background-color: #f0f0f0;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            color: #555;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="url"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #4b6cb7;
+            outline: none;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .list-items {
+            margin-bottom: 20px;
+        }
+        
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .list-item button {
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        .add-item-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .add-item-form input {
+            flex: 1;
+        }
+        
+        .add-item-form button {
+            background-color: #4b6cb7;
+            color: white;
+            border: none;
+            padding: 12px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .preview-section {
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .preview-section h3 {
+            color: #555;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            transform: translateY(-100px);
+            opacity: 0;
+            transition: all 0.5s;
+        }
+        
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 20px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #777;
+            transition: color 0.3s;
+        }
+        
+        .bottom-nav-item.active {
+            color: #4b6cb7;
+        }
+        
+        .bottom-nav-icon {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+        
+        .bottom-nav-text {
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <h1>Job<span>Swipe</span> <span class="employer-badge">EMPLOYERS</span></h1>
+            </div>
+            
+            <div class="nav-links">
+                <a href="company-candidates.html">Candidates</a>
+                <a href="company-matches.html">Matches</a>
+                <a href="company-jobs.html">Job Listings</a>
+                <a href="company-profile.html" class="active">Company Profile</a>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Company Profile</h1>
+            <button class="save-btn" id="saveProfileBtn">Save Changes</button>
+        </div>
+        
+        <div class="profile-section">
+            <div class="section-header">
+                <h2>Company Information</h2>
+                <button>Edit</button>
+            </div>
+            
+            <form id="companyInfoForm">
+                <div class="company-logo-container">
+                    <div class="company-logo" id="companyLogo">TG</div>
+                    <input type="file" id="logoUpload" accept="image/*" style="display: none;">
+                    <button type="button" class="logo-upload-btn" onclick="document.getElementById('logoUpload').click()">Change Logo</button>
+                </div>
+                
+                <div class="form-group">
+                    <label for="companyName">Company Name</label>
+                    <input type="text" id="companyName" value="TechGiant Corp" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="companyEmail">Business Email</label>
+                        <input type="email" id="companyEmail" value="careers@techgiant.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="companyWebsite">Website</label>
+                        <input type="url" id="companyWebsite" value="https://techgiant.com">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="companyIndustry">Industry</label>
+                        <select id="companyIndustry">
+                            <option value="technology" selected>Technology</option>
+                            <option value="healthcare">Healthcare</option>
+                            <option value="finance">Finance</option>
+                            <option value="education">Education</option>
+                            <option value="retail">Retail</option>
+                            <option value="manufacturing">Manufacturing</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="companySize">Company Size</label>
+                        <select id="companySize">
+                            <option value="1-10">1-10 employees</option>
+                            <option value="11-50">11-50 employees</option>
+                            <option value="51-200">51-200 employees</option>
+                            <option value="201-500">201-500 employees</option>
+                            <option value="501-1000">501-1000 employees</option>
+                            <option value="1000+" selected>1000+ employees</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="companyLocation">Headquarters</label>
+                        <input type="text" id="companyLocation" value="San Francisco, CA">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="companyFounded">Founded</label>
+                        <input type="text" id="companyFounded" value="2005">
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <div class="profile-section">
+            <div class="section-header">
+                <h2>About Company</h2>
+                <button>Edit</button>
+            </div>
+            
+            <div class="form-group">
+                <label for="companyDescription">Company Description</label>
+                <textarea id="companyDescription" rows="5">TechGiant is a leading technology company focused on building innovative solutions for enterprise clients. Our team is distributed across the globe, working on challenging problems in cloud computing, artificial intelligence, and big data.</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="companyCulture">Company Culture</label>
+                <textarea id="companyCulture" rows="4">We believe in fostering a collaborative environment where innovation thrives. Our teams are autonomous but aligned, focusing on delivering exceptional value to our customers while maintaining work-life balance.</textarea>
+            </div>
+        </div>
+        
+        <div class="profile-section">
+            <div class="section-header">
+                <h2>Benefits & Perks</h2>
+                <button>Edit</button>
+            </div>
+            
+            <div class="list-items" id="benefitsList">
+                <div class="list-item">
+                    <span>Competitive salary</span>
+                    <button>×</button>
+                </div>
+                <div class="list-item">
+                    <span>Health, dental, and vision insurance</span>
+                    <button>×</button>
+                </div>
+                <div class="list-item">
+                    <span>401(k) matching</span>
+                    <button>×</button>
+                </div>
+                <div class="list-item">
+                    <span>Unlimited PTO</span>
+                    <button>×</button>
+                </div>
+                <div class="list-item">
+                    <span>Remote work options</span>
+                    <button>×</button>
+                </div>
+                <div class="list-item">
+                    <span>Professional development budget</span>
+                    <button>×</button>
+                </div>
+            </div>
+            
+            <div class="add-item-form">
+                <input type="text" id="newBenefitInput" placeholder="Add a new benefit...">
+                <button id="addBenefitBtn">Add</button>
+            </div>
+        </div>
+        
+        <div class="profile-section">
+            <div class="section-header">
+                <h2>Preview</h2>
+                <button>Refresh</button>
+            </div>
+            
+            <div class="preview-section">
+                <h3>How candidates see your company:</h3>
+                <div id="companyPreview">
+                    <p><strong>Company Name:</strong> TechGiant Corp</p>
+                    <p><strong>Industry:</strong> Technology</p>
+                    <p><strong>Location:</strong> San Francisco, CA</p>
+                    <p><strong>Size:</strong> 1000+ employees</p>
+                    <p><strong>Founded:</strong> 2005</p>
+                    <p><strong>About:</strong> TechGiant is a leading technology company focused on building innovative solutions for enterprise clients. Our team is distributed across the globe, working on challenging problems in cloud computing, artificial intelligence, and big data.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="notification" id="saveNotification">
+        Changes saved successfully!
+    </div>
+    
+    <div class="bottom-nav">
+        <a href="company-candidates.html" class="bottom-nav-item">
+            <div class="bottom-nav-icon">🔍</div>
+            <div class="bottom-nav-text">Candidates</div>
+        </a>
+        
+        <a href="company-matches.html" class="bottom-nav-item">
+            <div class="bottom-nav-icon">✓</div>
+            <div class="bottom-nav-text">Matches</div>
+        </a>
+        
+        <a href="company-jobs.html" class="bottom-nav-item">
+            <div class="bottom-nav-icon">📋</div>
+            <div class="bottom-nav-text">Jobs</div>
+        </a>
+        
+        <a href="company-profile.html" class="bottom-nav-item active">
+            <div class="bottom-nav-icon">🏢</div>
+            <div class="bottom-nav-text">Company</div>
+        </a>
+    </div>
+
+    <script>
+        // Check if company is logged in
+        if (!localStorage.getItem('companyLoggedIn')) {
+            window.location.href = 'company-index.html';
+        }
+        
+        // Get company data
+        const companyData = JSON.parse(localStorage.getItem('companyData')) || {};
+        
+        // Initialize form with company data
+        function initializeForm() {
+            if (Object.keys(companyData).length > 0) {
+                document.getElementById('companyName').value = companyData.name || '';
+                document.getElementById('companyEmail').value = companyData.email || '';
+                document.getElementById('companyWebsite').value = companyData.website || '';
+                document.getElementById('companyIndustry').value = companyData.industry || 'technology';
+                document.getElementById('companySize').value = companyData.size || '1000+';
+                document.getElementById('companyLocation').value = companyData.headquarters || '';
+                document.getElementById('companyFounded').value = companyData.founded || '';
+                document.getElementById('companyDescription').value = companyData.description || '';
+                document.getElementById('companyCulture').value = companyData.culture || '';
+                
+                // Set company logo
+                const companyLogo = document.getElementById('companyLogo');
+                if (companyData.logo) {
+                    if (companyData.logoUrl) {
+                        companyLogo.innerHTML = `<img src="${companyData.logoUrl}" alt="${companyData.name} Logo">`;
+                    } else {
+                        companyLogo.textContent = companyData.logo;
+                    }
+                }
+                
+                // Update benefits list
+                updateBenefitsList();
+            }
+        }
+        
+        // Update benefits list
+        function updateBenefitsList() {
+            const benefitsList = document.getElementById('benefitsList');
+            benefitsList.innerHTML = '';
+            
+            if (companyData.benefits && companyData.benefits.length > 0) {
+                companyData.benefits.forEach((benefit, index) => {
+                    const listItem = document.createElement('div');
+                    listItem.className = 'list-item';
+                    listItem.innerHTML = `
+                        <span>${benefit}</span>
+                        <button data-index="${index}">×</button>
+                    `;
+                    benefitsList.appendChild(listItem);
+                });
+                
+                // Add event listeners to remove buttons
+                const removeButtons = benefitsList.querySelectorAll('button');
+                removeButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        removeBenefit(index);
+                    });
+                });
+            }
+        }
+        
+        // Add new benefit
+        function addBenefit(benefit) {
+            if (!companyData.benefits) {
+                companyData.benefits = [];
+            }
+            
+            companyData.benefits.push(benefit);
+            localStorage.setItem('companyData', JSON.stringify(companyData));
+            updateBenefitsList();
+        }
+        
+        // Remove benefit
+        function removeBenefit(index) {
+            if (companyData.benefits && companyData.benefits.length > index) {
+                companyData.benefits.splice(index, 1);
+                localStorage.setItem('companyData', JSON.stringify(companyData));
+                updateBenefitsList();
+            }
+        }
+        
+        // Add benefit button
+        document.getElementById('addBenefitBtn').addEventListener('click', function() {
+            const newBenefitInput = document.getElementById('newBenefitInput');
+            const benefit = newBenefitInput.value.trim();
+            
+            if (benefit) {
+                addBenefit(benefit);
+                newBenefitInput.value = '';
+            }
+        });
+        
+        // Logo upload handling
+        document.getElementById('logoUpload').addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const companyLogo = document.getElementById('companyLogo');
+                    companyLogo.innerHTML = `<img src="${e.target.result}" alt="Company Logo">`;
+                    
+                    // Store logo URL in company data
+                    companyData.logoUrl = e.target.result;
+                    localStorage.setItem('companyData', JSON.stringify(companyData));
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Save changes
+        document.getElementById('saveProfileBtn').addEventListener('click', function() {
+            // Get form values
+            const name = document.getElementById('companyName').value;
+            const email = document.getElementById('companyEmail').value;
+            const website = document.getElementById('companyWebsite').value;
+            const industry = document.getElementById('companyIndustry').value;
+            const size = document.getElementById('companySize').value;
+            const headquarters = document.getElementById('companyLocation').value;
+            const founded = document.getElementById('companyFounded').value;
+            const description = document.getElementById('companyDescription').value;
+            const culture = document.getElementById('companyCulture').value;
+            
+            // Update company data
+            companyData.name = name;
+            companyData.email = email;
+            companyData.website = website;
+            companyData.industry = industry;
+            companyData.size = size;
+            companyData.headquarters = headquarters;
+            companyData.founded = founded;
+            companyData.description = description;
+            companyData.culture = culture;
+            
+            // Save to localStorage
+            localStorage.setItem('companyData', JSON.stringify(companyData));
+            
+            // Show notification
+            const notification = document.getElementById('saveNotification');
+            notification.classList.add('show');
+            
+            // Hide notification after 3 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+            
+            // Update preview
+            updatePreview();
+        });
+        
+        // Update preview
+        function updatePreview() {
+            const companyPreview = document.getElementById('companyPreview');
+            companyPreview.innerHTML = `
+                <p><strong>Company Name:</strong> ${companyData.name || 'TechGiant Corp'}</p>
+                <p><strong>Industry:</strong> ${companyData.industry || 'Technology'}</p>
+                <p><strong>Location:</strong> ${companyData.headquarters || 'San Francisco, CA'}</p>
+                <p><strong>Size:</strong> ${companyData.size || '1000+ employees'}</p>
+                <p><strong>Founded:</strong> ${companyData.founded || '2005'}</p>
+                <p><strong>About:</strong> ${companyData.description || 'TechGiant is a leading technology company focused on building innovative solutions for enterprise clients.'}</p>
+            `;
+        }
+        
+        // Initialize on page load
+        initializeForm();
+        updatePreview();
+    </script>
+</body>
+</html>

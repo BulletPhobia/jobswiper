@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobSwipe - Candidate Discovery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            color: #333;
+            font-size: 24px;
+        }
+        
+        .logo span {
+            color: #4b6cb7;
+            font-weight: bold;
+        }
+        
+        .employer-badge {
+            background-color: #4b6cb7;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .nav-links a.active {
+            color: #4b6cb7;
+            background-color: rgba(75, 108, 183, 0.1);
+        }
+        
+        .container {
+            display: flex;
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            gap: 30px;
+        }
+        
+        .sidebar {
+            flex: 0 0 300px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            height: fit-content;
+        }
+        
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .filter-header h2 {
+            color: #333;
+            font-size: 18px;
+        }
+        
+        .reset-btn {
+            color: #4b6cb7;
+            background: none;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .filter-group {
+            margin-bottom: 20px;
+        }
+        
+        .filter-group h3 {
+            color: #555;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+        
+        .filter-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .filter-checkbox {
+            display: flex;
+            align-items: center;
+        }
+        
+        .filter-checkbox input {
+            margin-right: 10px;
+        }
+        
+        .filter-checkbox label {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .filter-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .range-slider {
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .range-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 12px;
+            color: #888;
+        }
+        
+        .job-filter {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .apply-filters {
+            background-color: #4b6cb7;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 5px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        .main-content {
+            flex: 1;
+        }
+        
+        .swipe-container {
+            position: relative;
+            height: 70vh;
+            max-height: 700px;
+            perspective: 1000px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .candidate-card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            padding: 30px;
+            transform-style: preserve-3d;
+            transition: all 0.5s;
+            overflow: hidden;
+        }
+        
+        .candidate-card.swiped-left {
+            transform: translateX(-150%) rotateZ(-30deg);
+            opacity: 0;
+        }
+        
+        .candidate-card.swiped-right {
+            transform: translateX(150%) rotateZ(30deg);
+            opacity: 0;
+        }
+        
+        .candidate-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+        }
+        
+        .candidate-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .candidate-title {
+            font-size: 18px;
+            color: #555;
+        }
+        
+        .candidate-details {
+            margin-bottom: 20px;
+        }
+        
+        .candidate-meta {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        
+        .candidate-meta-item {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #666;
+            padding: 5px 10px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+        }
+        
+        .candidate-meta-item span {
+            margin-right: 5px;
+        }
+        
+        .candidate-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .skill-tag {
+            background-color: #eef2ff;
+            color: #4b6cb7;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+        
+        .candidate-desc {
+            color: #444;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            overflow-y: auto;
+            max-height: 200px;
+            padding-right: 10px;
+        }
+        
+        .candidate-desc h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .candidate-desc p {
+            margin-bottom: 15px;
+        }
+        
+        .job-match {
+            background-color: #e6f7e6;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .job-match-icon {
+            font-size: 20px;
+        }
+        
+        .job-match-text {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .swipe-actions {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .swipe-btn {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .swipe-left {
+            background-color: #fd6b6b;
+            color: white;
+        }
+        
+        .swipe-left:hover {
+            background-color: #fc5252;
+            transform: scale(1.1);
+        }
+        
+        .swipe-right {
+            background-color: #26de81;
+            color: white;
+        }
+        
+        .swipe-right:hover {
+            background-color: #20c974;
+            transform: scale(1.1);
+        }
+        
+        .swipe-info {
+            background-color: #4b6cb7;
+            color: white;
+        }
+        
+        .swipe-info:hover {
+            background-color: #3f5ca0;
+            transform: scale(1.1);
+        }
+        
+        .match-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            font-size: 50px;
+            font-weight: bold;
+            color: #26de81;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px 40px;
+            border-radius: 10px;
+            z-index: 10;
+            transition: all 0.3s;
+            opacity: 0;
+        }
+        
+        .match-indicator.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+        
+        .reject-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            font-size: 50px;
+            font-weight: bold;
+            color: #fd6b6b;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px 40px;
+            border-radius: 10px;
+            z-index: 10;
+            transition: all 0.3s;
+            opacity: 0;
+        }
+        
+        .reject-indicator.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+        
+        .no-candidates {
+            display: none;
+            height: 100%;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .no-candidates h2 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .no-candidates p {
+            color: #777;
+            margin-bottom: 20px;
+        }
+        
+        .refresh-btn {
+            background-color: #4b6cb7;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .stats-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            flex: 1;
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #4b6cb7;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 20px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #777;
+            transition: color 0.3s;
+        }
+        
+        .bottom-nav-item.active {
+            color: #4b6cb7;
+        }
+        
+        .bottom-nav-icon {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+        
+        .bottom-nav-text {
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <h1>Job<span>Swipe</span> <span class="employer-badge">EMPLOYERS</span></h1>
+            </div>
+            
+            <div class="nav-links">
+                <a href="company-candidates.html" class="active">Candidates</a>
+                <a href="company-matches.html">Matches</a>
+                <a href="company-jobs.html">Job Listings</a>
+                <a href="company-profile.html">Company Profile</a>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="sidebar">
+            <div class="filter-header">
+                <h2>Filter Candidates</h2>
+                <button class="reset-btn" id="resetFilters">Reset</button>
+            </div>
+            
+            <div class="filter-group">
+                <h3>Skills</h3>
+                <input type="text" class="filter-input" id="skillsFilter" placeholder="Enter skills (e.g., JavaScript, Python)">
+            </div>
+            
+            <div class="filter-group">
+                <h3>Experience Level</h3>
+                <div class="filter-options">
+                    <div class="filter-checkbox">
+                        <input type="checkbox" id="exp0_2" value="0-2">
+                        <label for="exp0_2">0-2 years</label>
+                    </div>
+                    <div class="filter-checkbox">
+                        <input type="checkbox" id="exp3_5" value="3-5" checked>
+                        <label for="exp3_5">3-5 years</label>
+                    </div>
+                    <div class="filter-checkbox">
+                        <input type="checkbox" id="exp6_9" value="6-9" checked>
+                        <label for="exp6_9">6-9 years</label>
+                    </div>
+                    <div class="filter-checkbox">
+                        <input type="checkbox" id="exp10plus" value="10+">
+                        <label for="exp10plus">10+ years</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="filter-group">
+                <h3>Education</h3>
+                <div class="filter-options">
+                    <div class="filter-checkbox">
+                        <input type="checkbox" id="eduAssociate" value="Associate">
+                        <label for="eduAssociate">Associate Degree</label>
+                    </div>
+                    <div class="filter-checkbox">
+                        <input type="checkbox" id="eduBachelor" value="Bachelor" checked>
+                        <label for="eduBachelor">Bachelor's Degree</label>
+                    </div>
+                    <div class="filter-checkbox">
+                        <input type="checkbox" id="eduMaster" value="Master" checked>
+                        <label for="eduMaster">Master's Degree</label>
+                    </div>
+                    <div class="filter-checkbox">
+                        <input type="checkbox" id="eduPhd" value="PhD" checked>
+                        <label for="eduPhd">PhD</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="filter-group">
+                <h3>Location Preference</h3>
+                <div class="filter-options">
+                    <div class="filter-checkbox">
+                        <input type="checkbox" id="locRemote" value="Remote" checked>
+                        <label for="locRemote">Remote</label>
+                    </div>
+                    <div class="filter-checkbox">
+                        <input type="checkbox" id="locHybrid" value="Hybrid" checked>
+                        <label for="locHybrid">Hybrid</label>
+                    </div>
+                    <div class="filter-checkbox">
+                        <input type="checkbox" id="locOnsite" value="On-site" checked>
+                        <label for="locOnsite">On-site</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="filter-group">
+                <h3>Salary Range</h3>
+                <input type="range" id="salaryRange" min="50000" max="200000" step="10000" value="120000" class="range-slider">
+                <div class="range-labels">
+                    <span>$50k</span>
+                    <span id="salaryValue">$120k</span>
+                    <span>$200k+</span>
+                </div>
+            </div>
+            
+            <div class="filter-group">
+                <h3>Job Listing</h3>
+                <select id="jobFilter" class="job-filter">
+                    <option value="all">All Jobs</option>
+                    <option value="1">Senior Software Engineer</option>
+                    <option value="2">UX/UI Designer</option>
+                    <option value="3">Data Scientist</option>
+                </select>
+            </div>
+            
+            <button class="apply-filters" id="applyFilters">Apply Filters</button>
+        </div>
+        
+        <div class="main-content">
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-value">42</div>
+                    <div class="stat-label">Candidates Viewed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">18</div>
+                    <div class="stat-label">Matches</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">Job Applications</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Active Jobs</div>
+                </div>
+            </div>
+            
+            <div class="swipe-container">
+                <!-- Candidate cards will be dynamically inserted here -->
+                
+                <div class="match-indicator">
+                    MATCH! 🎉
+                </div>
+                
+                <div class="reject-indicator">
+                    PASS ✓
+                </div>
+                
+                <div class="no-candidates">
+                    <h2>No More Candidates</h2>
+                    <p>You've seen all available candidates matching your criteria.</p>
+                    <button class="refresh-btn">Refresh Candidates</button>
+                </div>
+            </div>
+            
+            <div class="swipe-actions">
+                <button class="swipe-btn swipe-left" id="rejectBtn">👎</button>
+                <button class="swipe-btn swipe-info" id="infoBtn">ℹ️</button>
+                <button class="swipe-btn swipe-right" id="likeBtn">👍</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="bottom-nav">
+        <a href="company-candidates.html" class="bottom-nav-item active">
+            <div class="bottom-nav-icon">🔍</div>
+            <div class="bottom-nav-text">Candidates</div>
+        </a>
+        
+        <a href="company-matches.html" class="bottom-nav-item">
+            <div class="bottom-nav-icon">✓</div>
+            <div class="bottom-nav-text">Matches</div>
+        </a>
+        
+        <a href="company-jobs.html" class="bottom-nav-item">
+            <div class="bottom-nav-icon">📋</div>
+            <div class="bottom-nav-text">Jobs</div>
+        </a>
+        
+        <a href="company-profile.html" class="bottom-nav-item">
+            <div class="bottom-nav-icon">🏢</div>
+            <div class="bottom-nav-text">Company</div>
+        </a>
+    </div>
+
+    <script>
+        // Check if company is logged in
+        if (!localStorage.getItem('companyLoggedIn')) {
+            window.location.href = 'company-index.html';
+        }
+        
+        // Get candidates to swipe
+        let candidates = JSON.parse(localStorage.getItem('candidatesToSwipe')) || [];
+        
+        // Get job listings
+        const jobListings = JSON.parse(localStorage.getItem('companyJobs')) || [];
+        
+        // Current candidate index
+        let currentCandidateIndex = 0;
+        
+        // Array to keep track of liked candidates
+        let likedCandidates = JSON.parse(localStorage.getItem('candidateMatches')) || [];
+        
+        // Create candidate card
+        function createCandidateCard(candidate) {
+            const swipeContainer = document.querySelector('.swipe-container');
+            
+            // Create candidate card element
+            const candidateCard = document.createElement('div');
+            candidateCard.className = 'candidate-card';
+            candidateCard.id = `candidate-${candidate.id}`;
+            
+            // Check if candidate matches any job listing
+            const matchingJobs = candidate.jobFit || [];
+            let jobMatchHtml = '';
+            
+            if (matchingJobs.length > 0) {
+                const matchingJobTitles = matchingJobs.map(jobId => {
+                    const job = jobListings.find(j => j.id === jobId);
+                    return job ? job.title : '';
+                }).filter(title => title !== '');
+                
+                if (matchingJobTitles.length > 0) {
+                    jobMatchHtml = `
+                        <div class="job-match">
+                            <div class="job-match-icon">⭐</div>
+                            <div class="job-match-text">
+                                Great match for: ${matchingJobTitles.join(', ')}
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            
+            // Create candidate card content
+            candidateCard.innerHTML = `
+                <div class="candidate-header">
+                    <div class="avatar">
+                        ${candidate.avatar || '👤'}
+                    </div>
+                    <div>
+                        <div class="candidate-name">${candidate.name}</div>
+                        <div class="candidate-title">${candidate.title}</div>
+                    </div>
+                </div>
+                
+                <div class="candidate-details">
+                    <div class="candidate-meta">
+                        <div class="candidate-meta-item">
+                            <span>📍</span> ${candidate.location}
+                        </div>
+                        <div class="candidate-meta-item">
+                            <span>💼</span> ${candidate.experience} experience
+                        </div>
+                        <div class="candidate-meta-item">
+                            <span>🎓</span> ${candidate.education}
+                        </div>
+                        <div class="candidate-meta-item">
+                            <span>🏢</span> ${candidate.remote}
+                        </div>
+                        <div class="candidate-meta-item">
+                            <span>💰</span> ${candidate.salary || 'Not specified'}
+                        </div>
+                    </div>
+                    
+                    <div class="candidate-desc">
+                        <h3>About</h3>
+                        <p>${candidate.about}</p>
+                    </div>
+                    
+                    <div class="candidate-skills">
+                        ${candidate.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                    </div>
+                    
+                    ${jobMatchHtml}
+                </div>
+            `;
+            
+            swipeContainer.appendChild(candidateCard);
+            
+            // Make candidate card swipeable
+            let startX, moveX;
+            let cardWidth = candidateCard.offsetWidth;
+            
+            candidateCard.addEventListener('touchstart', function(e) {
+                startX = e.touches[0].clientX;
+            });
+            
+            candidateCard.addEventListener('touchmove', function(e) {
+                moveX = e.touches[0].clientX;
+                let offsetX = moveX - startX;
+                let rotate = offsetX * 0.1;
+                
+                candidateCard.style.transform = `translateX(${offsetX}px) rotate(${rotate}deg)`;
+                
+                // Add visual feedback based on swipe direction
+                if (offsetX > 50) {
+                    candidateCard.style.boxShadow = '0 10px 25px rgba(38, 222, 129, 0.2)';
+                } else if (offsetX < -50) {
+                    candidateCard.style.boxShadow = '0 10px 25px rgba(253, 107, 107, 0.2)';
+                } else {
+                    candidateCard.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.1)';
+                }
+            });
+            
+            candidateCard.addEventListener('touchend', function() {
+                let offsetX = moveX - startX;
+                
+                if (offsetX > 100) {
+                    // Swiped right - like
+                    candidateCard.classList.add('swiped-right');
+                    handleLike(candidate);
+                } else if (offsetX < -100) {
+                    // Swiped left - reject
+                    candidateCard.classList.add('swiped-left');
+                    handleReject();
+            }
+        });
+        
+        document.getElementById('infoBtn').addEventListener('click', function() {
+            // Toggle scrollable area for candidate description
+            const candidateDesc = document.querySelector('.candidate-desc');
+            if (candidateDesc) {
+                if (candidateDesc.style.maxHeight === '200px' || !candidateDesc.style.maxHeight) {
+                    candidateDesc.style.maxHeight = '400px';
+                } else {
+                    candidateDesc.style.maxHeight = '200px';
+                }
+            }
+        });
+        
+        // Refresh button event listener
+        document.querySelector('.refresh-btn').addEventListener('click', function() {
+            // Reset candidate index and reload candidates
+            currentCandidateIndex = 0;
+            document.querySelector('.no-candidates').style.display = 'none';
+            initializeCandidates();
+        });
+        
+        // Salary range display
+        const salaryRange = document.getElementById('salaryRange');
+        const salaryValue = document.getElementById('salaryValue');
+        
+        salaryRange.addEventListener('input', function() {
+            salaryValue.textContent = '
+                } else {
+                    // Reset position
+                    candidateCard.style.transform = '';
+                    candidateCard.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.1)';
+                }
+            });
+            
+            return candidateCard;
+        }
+        
+        // Initialize the first candidate card
+        function initializeCandidates() {
+            if (candidates.length === 0) {
+                document.querySelector('.no-candidates').style.display = 'flex';
+                return;
+            }
+            
+            createCandidateCard(candidates[currentCandidateIndex]);
+        }
+        
+        // Handle like action
+        function handleLike(candidate) {
+            // Show match indicator
+            const matchIndicator = document.querySelector('.match-indicator');
+            matchIndicator.classList.add('show');
+            
+            // Add to liked candidates if not already in matches
+            if (!likedCandidates.some(c => c.id === candidate.id)) {
+                // Create a new match object
+                const newMatch = {
+                    ...candidate,
+                    status: "New Match",
+                    matchDate: "Today"
+                };
+                
+                likedCandidates.push(newMatch);
+                localStorage.setItem('candidateMatches', JSON.stringify(likedCandidates));
+            }
+            
+            // Hide indicator after a delay
+            setTimeout(() => {
+                matchIndicator.classList.remove('show');
+                loadNextCandidate();
+            }, 1500);
+        }
+        
+        // Handle reject action
+        function handleReject() {
+            // Show reject indicator
+            const rejectIndicator = document.querySelector('.reject-indicator');
+            rejectIndicator.classList.add('show');
+            
+            // Hide indicator after a delay
+            setTimeout(() => {
+                rejectIndicator.classList.remove('show');
+                loadNextCandidate();
+            }, 1000);
+        }
+        
+        // Load next candidate
+        function loadNextCandidate() {
+            // Remove current candidate card
+            const currentCard = document.querySelector('.candidate-card');
+            if (currentCard) {
+                currentCard.remove();
+            }
+            
+            // Increment index
+            currentCandidateIndex++;
+            
+            // Check if there are more candidates
+            if (currentCandidateIndex < candidates.length) {
+                createCandidateCard(candidates[currentCandidateIndex]);
+            } else {
+                // No more candidates
+                document.querySelector('.no-candidates').style.display = 'flex';
+            }
+        }
+        
+        // Button event listeners
+        document.getElementById('likeBtn').addEventListener('click', function() {
+            const currentCard = document.querySelector('.candidate-card');
+            if (currentCard) {
+                currentCard.classList.add('swiped-right');
+                handleLike(candidates[currentCandidateIndex]);
+            }
+        });
+        
+        document.getElementById('rejectBtn').addEventListener('click', function() {
+            const currentCard = document.querySelector('.candidate-card');
+            if (currentCard) {
+                currentCard.classList.add('swiped-left');
+                handleReject(); + (parseInt(this.value) / 1000) + 'k';
+        });
+        
+        // Apply filters button
+        document.getElementById('applyFilters').addEventListener('click', function() {
+            // In a real app, this would filter the candidates
+            // For demo, just reset and show a message
+            alert('Filters applied. Found ' + candidates.length + ' matching candidates.');
+        });
+        
+        // Reset filters button
+        document.getElementById('resetFilters').addEventListener('click', function() {
+            // Reset all filter inputs
+            document.getElementById('skillsFilter').value = '';
+            document.getElementById('exp0_2').checked = false;
+            document.getElementById('exp3_5').checked = true;
+            document.getElementById('exp6_9').checked = true;
+            document.getElementById('exp10plus').checked = false;
+            document.getElementById('eduAssociate').checked = false;
+            document.getElementById('eduBachelor').checked = true;
+            document.getElementById('eduMaster').checked = true;
+            document.getElementById('eduPhd').checked = true;
+            document.getElementById('locRemote').checked = true;
+            document.getElementById('locHybrid').checked = true;
+            document.getElementById('locOnsite').checked = true;
+            document.getElementById('salaryRange').value = 120000;
+            salaryValue.textContent = '$120k';
+            document.getElementById('jobFilter').value = 'all';
+            
+            alert('Filters have been reset.');
+        });
+        
+        // Initialize the app
+        initializeCandidates();
+    </script>
+</body>
+</html>
+                } else {
+                    // Reset position
+                    candidateCard.style.transform = '';
+                    candidateCard.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.1)';
+                }
+            });
+            
+            return candidateCard;
+        }
+        
+        // Initialize the first candidate card
+        function initializeCandidates() {
+            if (candidates.length === 0) {
+                document.querySelector('.no-candidates').style.display = 'flex';
+                return;
+            }
+            
+            createCandidateCard(candidates[currentCandidateIndex]);
+        }
+        
+        // Handle like action
+        function handleLike(candidate) {
+            // Show match indicator
+            const matchIndicator = document.querySelector('.match-indicator');
+            matchIndicator.classList.add('show');
+            
+            // Add to liked candidates if not already in matches
+            if (!likedCandidates.some(c => c.id === candidate.id)) {
+                // Create a new match object
+                const newMatch = {
+                    ...candidate,
+                    status: "New Match",
+                    matchDate: "Today"
+                };
+                
+                likedCandidates.push(newMatch);
+                localStorage.setItem('candidateMatches', JSON.stringify(likedCandidates));
+            }
+            
+            // Hide indicator after a delay
+            setTimeout(() => {
+                matchIndicator.classList.remove('show');
+                loadNextCandidate();
+            }, 1500);
+        }
+        
+        // Handle reject action
+        function handleReject() {
+            // Show reject indicator
+            const rejectIndicator = document.querySelector('.reject-indicator');
+            rejectIndicator.classList.add('show');
+            
+            // Hide indicator after a delay
+            setTimeout(() => {
+                rejectIndicator.classList.remove('show');
+                loadNextCandidate();
+            }, 1000);
+        }
+        
+        // Load next candidate
+        function loadNextCandidate() {
+            // Remove current candidate card
+            const currentCard = document.querySelector('.candidate-card');
+            if (currentCard) {
+                currentCard.remove();
+            }
+            
+            // Increment index
+            currentCandidateIndex++;
+            
+            // Check if there are more candidates
+            if (currentCandidateIndex < candidates.length) {
+                createCandidateCard(candidates[currentCandidateIndex]);
+            } else {
+                // No more candidates
+                document.querySelector('.no-candidates').style.display = 'flex';
+            }
+        }
+        
+        // Button event listeners
+        document.getElementById('likeBtn').addEventListener('click', function() {
+            const currentCard = document.querySelector('.candidate-card');
+            if (currentCard) {
+                currentCard.classList.add('swiped-right');
+                handleLike(candidates[currentCandidateIndex]);
+            }
+        });
+        
+        document.getElementById('rejectBtn').addEventListener('click', function() {
+            const currentCard = document.querySelector('.candidate-card');
+            if (currentCard) {
+                currentCard.classList.add('swiped-left');
+                handleReject();

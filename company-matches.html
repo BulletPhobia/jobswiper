@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobSwipe - Candidate Matches</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            color: #333;
+            font-size: 24px;
+        }
+        
+        .logo span {
+            color: #4b6cb7;
+            font-weight: bold;
+        }
+        
+        .employer-badge {
+            background-color: #4b6cb7;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .nav-links a.active {
+            color: #4b6cb7;
+            background-color: rgba(75, 108, 183, 0.1);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .page-title {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 28px;
+        }
+        
+        .filter-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .filter-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .filter-btn {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn.active {
+            background-color: #4b6cb7;
+            color: white;
+            border-color: #4b6cb7;
+        }
+        
+        .sort-dropdown {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 14px;
+            background-color: white;
+        }
+        
+        .matches-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        
+        .match-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .match-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .match-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+        }
+        
+        .match-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .match-title {
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .match-status {
+            margin-left: auto;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-new {
+            background-color: #e6f7e6;
+            color: #155724;
+        }
+        
+        .status-contacted {
+            background-color: #e3f2fd;
+            color: #0c5460;
+        }
+        
+        .status-interviewing {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-hired {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-rejected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .match-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .match-meta-item {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .match-meta-item span {
+            margin-right: 5px;
+        }
+        
+        .match-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .skill-tag {
+            background-color: #eef2ff;
+            color: #4b6cb7;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        
+        .job-match {
+            font-size: 13px;
+            color: #155724;
+            background-color: #e6f7e6;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .job-match span {
+            margin-right: 5px;
+        }
+        
+        .match-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        
+        .match-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border: none;
+            text-align: center;
+        }
+        
+        .view-btn {
+            background-color: #f0f0f0;
+            color: #555;
+        }
+        
+        .view-btn:hover {
+            background-color: #e5e5e5;
+        }
+        
+        .contact-btn {
+            background-color: #4b6cb7;
+            color: white;
+        }
+        
+        .contact-btn:hover {
+            background-color: #3f5ca0;
+        }
+        
+        .reject-btn {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .reject-btn:hover {
+            background-color: #f5c6cb;
+        }
+        
+        .match-date {
+            font-size: 12px;
+            color: #888;
+            margin-top: 10px;
+            text-align: right;
+        }
+        
+        .empty-matches {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 50px 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .empty-matches h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .empty-matches p {
+            color: #777;
+            margin-bottom: 20px;
+            max-width: 400px;
+        }
+        
+        .browse-btn {
+            background-color: #4b6cb7;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+        }
+        
+        .browse-btn:hover {
+            background-color: #3f5ca0;
+        }
+        
+        .stats-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            flex: 1;
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #4b6cb7;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 20px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #777;
+            transition: color 0.3s;
+        }
+        
+        .bottom-nav-item.active {
+            color: #4b6cb7;
+        }
+        
+        .bottom-nav-icon {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+        
+        .bottom-nav-text {
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <h1>Job<span>Swipe</span> <span class="employer-badge">EMPLOYERS</span></h1>
+            </div>
+            
+            <div class="nav-links">
+                <a href="company-candidates.html">Candidates</a>
+                <a href="company-matches.html" class="active">Matches</a>
+                <a href="company-jobs.html">Job Listings</a>
+                <a href="company-profile.html">Company Profile</a>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <h1 class="page-title">Candidate Matches</h1>
+        
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-value">18</div>
+                <div class="stat-label">Total Matches</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">7</div>
+                <div class="stat-label">New Matches</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">5</div>
+                <div class="stat-label">In Progress</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">60%</div>
+                <div class="stat-label">Response Rate</div>
+            </div>
+        </div>
+        
+        <div class="filter-container">
+            <div class="filter-group">
+                <button class="filter-btn active">All</button>
+                <button class="filter-btn">New Match</button>
+                <button class="filter-btn">Contacted</button>
+                <button class="filter-btn">Interviewing</button>
+                <button class="filter-btn">Hired</button>
+            </div>
+            
+            <select class="sort-dropdown">
+                <option value="recent">Most Recent</option>
+                <option value="name">Name</option>
+                <option value="job">Job Title</option>
+            </select>
+        </div>
+        
+        <div id="matchesGrid" class="matches-grid">
+            <!-- Matches will be dynamically added here -->
+        </div>
+        
+        <div id="emptyMatches" class="empty-matches">
+            <h2>No Matches Yet</h2>
+            <p>Start browsing candidates to find great matches for your job listings!</p>
+            <a href="company-candidates.html" class="browse-btn">Browse Candidates</a>
+        </div>
+    </div>
+    
+    <div class="bottom-nav">
+        <a href="company-candidates.html" class="bottom-nav-item">
+            <div class="bottom-nav-icon">🔍</div>
+            <div class="bottom-nav-text">Candidates</div>
+        </a>
+        
+        <a href="company-matches.html" class="bottom-nav-item active">
+            <div class="bottom-nav-icon">✓</div>
+            <div class="bottom-nav-text">Matches</div>
+        </a>
+        
+        <a href="company-jobs.html" class="bottom-nav-item">
+            <div class="bottom-nav-icon">📋</div>
+            <div class="bottom-nav-text">Jobs</div>
+        </a>
+        
+        <a href="company-profile.html" class="bottom-nav-item">
+            <div class="bottom-nav-icon">🏢</div>
+            <div class="bottom-nav-text">Company</div>
+        </a>
+    </div>
+
+    <script>
+        // Check if company is logged in
+        if (!localStorage.getItem('companyLoggedIn')) {
+            window.location.href = 'company-index.html';
+        }
+        
+        // Get candidate matches
+        const candidateMatches = JSON.parse(localStorage.getItem('candidateMatches')) || [];
+        
+        // Get job listings
+        const jobListings = JSON.parse(localStorage.getItem('companyJobs')) || [];
+        
+        // Reference to matches grid and empty matches container
+        const matchesGrid = document.getElementById('matchesGrid');
+        const emptyMatches = document.getElementById('emptyMatches');
+        
+        // Function to create a match card
+        function createMatchCard(candidate) {
+            // Get matching job if available
+            let jobMatch = '';
+            if (candidate.jobId) {
+                const job = jobListings.find(j => j.id === candidate.jobId);
+                if (job) {
+                    jobMatch = `
+                        <div class="job-match">
+                            <span>⭐</span> Match for: ${job.title}
+                        </div>
+                    `;
+                }
+            }
+            
+            // Get status class
+            let statusClass = '';
+            switch (candidate.status) {
+                case 'New Match':
+                    statusClass = 'status-new';
+                    break;
+                case 'Contacted':
+                    statusClass = 'status-contacted';
+                    break;
+                case 'Interviewing':
+                    statusClass = 'status-interviewing';
+                    break;
+                case 'Hired':
+                    statusClass = 'status-hired';
+                    break;
+                case 'Rejected':
+                    statusClass = 'status-rejected';
+                    break;
+                default:
+                    statusClass = 'status-new';
+            }
+            
+            // Create card element
+            const card = document.createElement('div');
+            card.className = 'match-card';
+            card.setAttribute('data-id', candidate.id);
+            
+            // Create card content
+            card.innerHTML = `
+                <div class="match-header">
+                    <div class="avatar">
+                        ${candidate.avatar || '👤'}
+                    </div>
+                    <div>
+                        <div class="match-name">${candidate.name}</div>
+                        <div class="match-title">${candidate.title}</div>
+                    </div>
+                    <div class="match-status ${statusClass}">${candidate.status}</div>
+                </div>
+                
+                <div class="match-meta">
+                    <div class="match-meta-item">
+                        <span>📍</span> ${candidate.location}
+                    </div>
+                    <div class="match-meta-item">
+                        <span>💼</span> ${candidate.experience}
+                    </div>
+                    <div class="match-meta-item">
+                        <span>🏢</span> ${candidate.remote}
+                    </div>
+                </div>
+                
+                <div class="match-skills">
+                    ${candidate.skills.slice(0, 4).map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                    ${candidate.skills.length > 4 ? `<span class="skill-tag">+${candidate.skills.length - 4}</span>` : ''}
+                </div>
+                
+                ${jobMatch}
+                
+                <div class="match-actions">
+                    <button class="match-btn view-btn">View Profile</button>
+                    <button class="match-btn contact-btn">Contact</button>
+                </div>
+                
+                <div class="match-date">Matched ${candidate.matchDate}</div>
+            `;
+            
+            return card;
+        }
+        
+        // Initialize matches grid
+        function initializeMatches() {
+            if (candidateMatches.length === 0) {
+                // Show empty state
+                matchesGrid.style.display = 'none';
+                emptyMatches.style.display = 'flex';
+                return;
+            }
+            
+            // Show matches grid and hide empty state
+            matchesGrid.style.display = 'grid';
+            emptyMatches.style.display = 'none';
+            
+            // Clear any existing matches
+            matchesGrid.innerHTML = '';
+            
+            // Add match cards
+            candidateMatches.forEach(candidate => {
+                const card = createMatchCard(candidate);
+                matchesGrid.appendChild(card);
+            });
+        }
+        
+        // Filter button event listeners
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // In a real app, filter matches based on selection
+                // For demo, just reinitialize all matches
+                initializeMatches();
+            });
+        });
+        
+        // Sort dropdown event listener
+        document.querySelector('.sort-dropdown').addEventListener('change', function() {
+            // In a real app, sort matches based on selection
+            // For demo, just reinitialize all matches
+            initializeMatches();
+        });
+        
+        // Initialize the matches grid
+        initializeMatches();
+        
+        // Handle view and contact buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('view-btn')) {
+                // In a real app, navigate to candidate details page
+                alert('Viewing candidate profile...');
+            } else if (e.target.classList.contains('contact-btn')) {
+                // In a real app, open contact form
+                alert('Opening messaging interface...');
+                
+                // Update status to "Contacted" for demo
+                const card = e.target.closest('.match-card');
+                if (card) {
+                    const candidateId = parseInt(card.getAttribute('data-id'));
+                    const candidateIndex = candidateMatches.findIndex(c => c.id === candidateId);
+                    
+                    if (candidateIndex !== -1 && candidateMatches[candidateIndex].status === 'New Match') {
+                        candidateMatches[candidateIndex].status = 'Contacted';
+                        localStorage.setItem('candidateMatches', JSON.stringify(candidateMatches));
+                        initializeMatches();
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

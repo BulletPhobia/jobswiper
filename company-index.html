@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobSwipe for Employers - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #4b6cb7, #182848);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+            width: 420px;
+            max-width: 100%;
+            padding: 40px;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo h1 {
+            color: #333;
+            font-size: 36px;
+            margin-bottom: 5px;
+        }
+        
+        .logo span {
+            color: #4b6cb7;
+            font-weight: bold;
+        }
+        
+        .logo p {
+            color: #777;
+            font-size: 16px;
+        }
+        
+        .employer-badge {
+            background-color: #4b6cb7;
+            color: white;
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 10px;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            color: #555;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        input[type="email"]:focus {
+            border-color: #4b6cb7;
+            outline: none;
+        }
+        
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .remember {
+            display: flex;
+            align-items: center;
+        }
+        
+        .remember input {
+            margin-right: 5px;
+        }
+        
+        .forgot a {
+            color: #4b6cb7;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .btn {
+            background-color: #4b6cb7;
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #3f5ca0;
+        }
+        
+        .register {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+        }
+        
+        .register a {
+            color: #4b6cb7;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .switcher {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 14px;
+            color: #777;
+        }
+        
+        .switcher a {
+            color: #4b6cb7;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .demo-instructions {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .demo-instructions h3 {
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        .demo-instructions ul {
+            padding-left: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .demo-instructions li {
+            margin-bottom: 5px;
+        }
+        
+        .demo-btn {
+            background-color: #27ae60;
+            margin-top: 10px;
+        }
+        
+        .demo-btn:hover {
+            background-color: #219653;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>Job<span>Swipe</span> <span class="employer-badge">EMPLOYERS</span></h1>
+            <p>Find your perfect candidates</p>
+        </div>
+        
+        <form id="companyLoginForm">
+            <div class="form-group">
+                <label for="email">Company Email</label>
+                <input type="email" id="email" name="email" value="techgiant@example.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" value="company123" required>
+            </div>
+            
+            <div class="remember-forgot">
+                <div class="remember">
+                    <input type="checkbox" id="remember" checked>
+                    <label for="remember">Remember me</label>
+                </div>
+                
+                <div class="forgot">
+                    <a href="#">Forgot Password?</a>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn">Login</button>
+            <button type="button" class="btn demo-btn" id="demoBtn">Enter Demo Mode</button>
+            
+            <div class="register">
+                New to JobSwipe? <a href="company-register.html">Register Your Company</a>
+            </div>
+            
+            <div class="switcher">
+                Looking for a job? <a href="index.html">Switch to Job Seeker</a>
+            </div>
+        </form>
+        
+        <div class="demo-instructions">
+            <h3>Company Demo Instructions:</h3>
+            <ul>
+                <li>Click "Enter Demo Mode" for instant access to employer dashboard</li>
+                <li>Browse through candidate profiles</li>
+                <li>Swipe right on candidates you're interested in</li>
+                <li>Manage your job listings and matches</li>
+                <li>All data is stored locally in your browser</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Set up demo company data
+        function setupDemoCompany() {
+            const companyData = {
+                name: "TechGiant Corp",
+                logo: "TG",
+                email: "techgiant@example.com",
+                description: "TechGiant is a leading technology company focused on building innovative solutions for enterprise clients. Our team is distributed across the globe, working on challenging problems in cloud computing, artificial intelligence, and big data.",
+                industry: "Technology",
+                size: "1000-5000",
+                founded: 2005,
+                headquarters: "San Francisco, CA",
+                benefits: [
+                    "Competitive salary",
+                    "Health, dental, and vision insurance",
+                    "401(k) matching",
+                    "Unlimited PTO",
+                    "Remote work options",
+                    "Professional development budget"
+                ],
+                culture: "We believe in fostering a collaborative environment where innovation thrives. Our teams are autonomous but aligned, focusing on delivering exceptional value to our customers while maintaining work-life balance."
+            };
+            
+            // Save company data
+            localStorage.setItem('companyData', JSON.stringify(companyData));
+            localStorage.setItem('companyLoggedIn', 'true');
+            
+            // Set up demo job listings
+            const jobListings = [
+                {
+                    id: 1,
+                    title: "Senior Software Engineer",
+                    department: "Engineering",
+                    location: "San Francisco, CA",
+                    remoteType: "Hybrid",
+                    salary: "$120,000 - $160,000",
+                    status: "Active",
+                    posted: "2 days ago",
+                    views: 245,
+                    applications: 18,
+                    matches: 7,
+                    description: "We're looking for an experienced Software Engineer to join our dynamic team.",
+                    requirements: [
+                        "5+ years of experience with JavaScript and modern frameworks",
+                        "Experience with cloud services (AWS, Azure, GCP)",
+                        "Strong problem-solving abilities",
+                        "Bachelor's degree in Computer Science or equivalent"
+                    ],
+                    skills: ["JavaScript", "React", "Node.js", "AWS", "Docker"]
+                },
+                {
+                    id: 2,
+                    title: "UX/UI Designer",
+                    department: "Design",
+                    location: "Remote",
+                    remoteType: "Fully Remote",
+                    salary: "$90,000 - $120,000",
+                    status: "Active",
+                    posted: "5 days ago",
+                    views: 189,
+                    applications: 14,
+                    matches: 6,
+                    description: "Join our growing design team and help build beautiful user interfaces for our products.",
+                    requirements: [
+                        "3+ years of experience in UX/UI design",
+                        "Proficiency in Figma, Sketch, or similar tools",
+                        "Understanding of user-centered design principles",
+                        "Portfolio demonstrating your design process"
+                    ],
+                    skills: ["Figma", "User Research", "Wireframing", "Prototyping", "Design Systems"]
+                },
+                {
+                    id: 3,
+                    title: "Data Scientist",
+                    department: "Data",
+                    location: "Boston, MA",
+                    remoteType: "On-site",
+                    salary: "$110,000 - $140,000",
+                    status: "Active",
+                    posted: "1 week ago",
+                    views: 156,
+                    applications: 12,
+                    matches: 5,
+                    description: "Use your analytical skills to help us uncover insights from complex datasets.",
+                    requirements: [
+                        "Masters or PhD in Statistics, Mathematics, Computer Science, or related field",
+                        "Experience with machine learning algorithms",
+                        "Proficiency in Python, R, or similar",
+                        "Knowledge of SQL and database systems"
+                    ],
+                    skills: ["Python", "Machine Learning", "SQL", "Data Visualization", "Statistics"]
+                }
+            ];
+            
+            localStorage.setItem('companyJobs', JSON.stringify(jobListings));
+            
+            // Create demo candidate matches
+            const candidateMatches = [
+                {
+                    id: 1,
+                    name: "Michael Johnson",
+                    title: "Senior Software Engineer",
+                    skills: ["JavaScript", "React", "Node.js", "TypeScript", "AWS"],
+                    experience: "8 years",
+                    education: "BS in Computer Science",
+                    location: "San Francisco, CA",
+                    remote: "Open to remote",
+                    status: "New Match",
+                    matchDate: "Today",
+                    jobId: 1,
+                    avatar: "👨‍💻",
+                    about: "Full stack developer with a passion for building scalable web applications. Experienced in modern JavaScript frameworks and cloud technologies."
+                },
+                {
+                    id: 2,
+                    name: "Sarah Williams",
+                    title: "UX/UI Designer",
+                    skills: ["Figma", "Adobe XD", "Sketch", "User Research", "Prototyping"],
+                    experience: "5 years",
+                    education: "BFA in Graphic Design",
+                    location: "New York, NY",
+                    remote: "Remote only",
+                    status: "Contacted",
+                    matchDate: "Yesterday",
+                    jobId: 2,
+                    avatar: "👩‍🎨",
+                    about: "Creative designer focused on crafting intuitive and engaging user experiences. Strong background in user research and design systems."
+                },
+                {
+                    id: 3,
+                    name: "David Chen",
+                    title: "Data Scientist",
+                    skills: ["Python", "Machine Learning", "TensorFlow", "SQL", "R"],
+                    experience: "4 years",
+                    education: "MS in Data Science",
+                    location: "Chicago, IL",
+                    remote: "Hybrid preferred",
+                    status: "Interviewing",
+                    matchDate: "2 days ago",
+                    jobId: 3,
+                    avatar: "👨‍🔬",
+                    about: "Data scientist with expertise in predictive modeling and machine learning. Skilled in transforming complex data into actionable insights."
+                }
+            ];
+            
+            localStorage.setItem('candidateMatches', JSON.stringify(candidateMatches));
+            
+            // Create demo candidates for swiping
+            const candidatesToSwipe = [
+                {
+                    id: 4,
+                    name: "Jennifer Lee",
+                    title: "Full Stack Developer",
+                    skills: ["JavaScript", "React", "Express", "MongoDB", "GraphQL"],
+                    experience: "6 years",
+                    education: "BS in Information Systems",
+                    location: "Austin, TX",
+                    remote: "Remote or hybrid",
+                    salary: "$110,000 - $130,000",
+                    avatar: "👩‍💻",
+                    about: "Versatile developer experienced in building full-stack web applications. Passionate about clean code and responsive design.",
+                    jobFit: [1]
+                },
+                {
+                    id: 5,
+                    name: "Robert Garcia",
+                    title: "Frontend Engineer",
+                    skills: ["JavaScript", "React", "Vue.js", "CSS", "Webpack"],
+                    experience: "4 years",
+                    education: "BA in Computer Science",
+                    location: "Portland, OR",
+                    remote: "Remote only",
+                    salary: "$95,000 - $115,000",
+                    avatar: "👨‍💻",
+                    about: "Frontend specialist focused on creating beautiful and performant user interfaces. Strong skills in modern JavaScript frameworks and CSS.",
+                    jobFit: [1, 2]
+                },
+                {
+                    id: 6,
+                    name: "Emily Wong",
+                    title: "Product Designer",
+                    skills: ["Figma", "UI Design", "User Research", "Prototyping", "Design Systems"],
+                    experience: "7 years",
+                    education: "MFA in Interaction Design",
+                    location: "Seattle, WA",
+                    remote: "Hybrid preferred",
+                    salary: "$100,000 - $130,000",
+                    avatar: "👩‍🎨",
+                    about: "Experienced product designer who combines user-centered design thinking with strategic business goals. Skilled in managing the entire design process.",
+                    jobFit: [2]
+                },
+                {
+                    id: 7,
+                    name: "Carlos Rodriguez",
+                    title: "Machine Learning Engineer",
+                    skills: ["Python", "TensorFlow", "PyTorch", "Data Analysis", "Computer Vision"],
+                    experience: "5 years",
+                    education: "PhD in Computer Science",
+                    location: "Boston, MA",
+                    remote: "Open to relocation",
+                    salary: "$130,000 - $160,000",
+                    avatar: "👨‍🔬",
+                    about: "Machine learning specialist with research background in computer vision. Experienced in developing and deploying ML models at scale.",
+                    jobFit: [3]
+                },
+                {
+                    id: 8,
+                    name: "Olivia Thompson",
+                    title: "Backend Developer",
+                    skills: ["Java", "Spring Boot", "Kubernetes", "Microservices", "AWS"],
+                    experience: "9 years",
+                    education: "MS in Software Engineering",
+                    location: "Denver, CO",
+                    remote: "Hybrid or remote",
+                    salary: "$120,000 - $150,000",
+                    avatar: "👩‍💻",
+                    about: "Experienced backend developer specializing in scalable distributed systems. Strong focus on performance, reliability, and maintainability.",
+                    jobFit: [1]
+                },
+                {
+                    id: 9,
+                    name: "Jason Kim",
+                    title: "Data Analyst",
+                    skills: ["SQL", "Python", "Tableau", "Excel", "Statistical Analysis"],
+                    experience: "3 years",
+                    education: "BS in Statistics",
+                    location: "Chicago, IL",
+                    remote: "No preference",
+                    salary: "$80,000 - $100,000",
+                    avatar: "👨‍💼",
+                    about: "Data analyst with strong SQL and visualization skills. Experienced in translating business questions into analytical solutions.",
+                    jobFit: [3]
+                },
+                {
+                    id: 10,
+                    name: "Sophia Martinez",
+                    title: "UI/UX Designer",
+                    skills: ["UI Design", "User Research", "Adobe XD", "Sketch", "Prototyping"],
+                    experience: "4 years",
+                    education: "BA in Graphic Design",
+                    location: "Miami, FL",
+                    remote: "Remote preferred",
+                    salary: "$85,000 - $105,000",
+                    avatar: "👩‍🎨",
+                    about: "Creative designer with a strong portfolio of digital products. Focused on creating accessible and engaging user experiences.",
+                    jobFit: [2]
+                }
+            ];
+            
+            localStorage.setItem('candidatesToSwipe', JSON.stringify(candidatesToSwipe));
+            
+            // Redirect to company dashboard
+            window.location.href = 'company-candidates.html';
+        }
+        
+        // Handle demo button click
+        document.getElementById('demoBtn').addEventListener('click', function() {
+            setupDemoCompany();
+        });
+        
+        // Handle login form submission
+        document.getElementById('companyLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (email && password) {
+                // For demo purposes, just set up with demo data
+                setupDemoCompany();
+            } else {
+                alert('Please enter both email and password');
+            }
+        });
+    </script>
+</body>
+</html>
