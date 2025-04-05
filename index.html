@@ -128,6 +128,28 @@
             text-decoration: none;
             font-weight: bold;
         }
+        
+        .demo-instructions {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .demo-instructions h3 {
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        .demo-instructions ul {
+            padding-left: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .demo-instructions li {
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
@@ -165,9 +187,66 @@
                 Don't have an account? <a href="register.html">Sign Up</a>
             </div>
         </form>
+        
+        <div class="demo-instructions">
+            <h3>Demo Instructions:</h3>
+            <ul>
+                <li>Click "Enter Demo Mode" for instant access</li>
+                <li>Or use any email/password to login</li>
+                <li>All data is stored locally in your browser</li>
+                <li>Try swiping on jobs to find matches!</li>
+            </ul>
+        </div>
     </div>
 
     <script>
+        // Pre-fill login form for demo
+        document.getElementById('username').value = "demo@example.com";
+        document.getElementById('password').value = "password123";
+        document.getElementById('remember').checked = true;
+        
+        // Add demo button
+        const form = document.getElementById('loginForm');
+        const demoButton = document.createElement('button');
+        demoButton.type = 'button';
+        demoButton.className = 'btn';
+        demoButton.style.marginTop = '10px';
+        demoButton.style.backgroundColor = '#6e8efb';
+        demoButton.textContent = 'Enter Demo Mode';
+        demoButton.addEventListener('click', function() {
+            // Set up demo user
+            localStorage.setItem('loggedIn', 'true');
+            localStorage.setItem('username', 'demo@example.com');
+            localStorage.setItem('firstName', 'Demo');
+            localStorage.setItem('lastName', 'User');
+            localStorage.setItem('hasProfile', 'true');
+            
+            // Create a pre-filled profile in localStorage
+            const demoProfile = {
+                firstName: 'Demo',
+                lastName: 'User',
+                email: 'demo@example.com',
+                phone: '(555) 123-4567',
+                location: 'San Francisco, CA',
+                title: 'Software Engineer',
+                experience: '3-5',
+                education: 'bachelor',
+                skills: ['JavaScript', 'React', 'Node.js', 'Python', 'AWS'],
+                about: 'Experienced software engineer with a passion for building intuitive user interfaces and scalable backend systems.',
+                jobTitles: ['Software Engineer', 'Frontend Developer', 'Full Stack Developer'],
+                salary: '120000',
+                jobTypes: ['fullTime', 'contract'],
+                workEnvironments: ['remote', 'hybrid'],
+                industries: ['tech', 'finance']
+            };
+            localStorage.setItem('userProfile', JSON.stringify(demoProfile));
+            
+            // Go directly to the swipe page
+            window.location.href = 'swipe.html';
+        });
+        
+        form.appendChild(demoButton);
+        
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -180,13 +259,31 @@
                 localStorage.setItem('loggedIn', 'true');
                 localStorage.setItem('username', username);
                 
-                // Check if user has a profile, if not redirect to profile setup
-                const hasProfile = localStorage.getItem('hasProfile');
-                if (hasProfile) {
-                    window.location.href = 'swipe.html';
-                } else {
-                    window.location.href = 'profile.html';
-                }
+                // Create a demo profile for instant access
+                const demoProfile = {
+                    firstName: username.split('@')[0],
+                    lastName: 'User',
+                    email: username,
+                    phone: '(555) 123-4567',
+                    location: 'San Francisco, CA',
+                    title: 'Software Engineer',
+                    experience: '3-5',
+                    education: 'bachelor',
+                    skills: ['JavaScript', 'React', 'Node.js', 'Python', 'AWS'],
+                    about: 'Experienced software engineer with a passion for building intuitive user interfaces and scalable backend systems.',
+                    jobTitles: ['Software Engineer', 'Frontend Developer', 'Full Stack Developer'],
+                    salary: '120000',
+                    jobTypes: ['fullTime', 'contract'],
+                    workEnvironments: ['remote', 'hybrid'],
+                    industries: ['tech', 'finance']
+                };
+                localStorage.setItem('userProfile', JSON.stringify(demoProfile));
+                localStorage.setItem('hasProfile', 'true');
+                localStorage.setItem('firstName', demoProfile.firstName);
+                localStorage.setItem('lastName', demoProfile.lastName);
+                
+                // Go directly to the swipe page
+                window.location.href = 'swipe.html';
             } else {
                 alert('Please enter both username and password');
             }
