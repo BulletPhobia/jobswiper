@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobSwipe - Find Your Perfect Job</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            color: #333;
+            font-size: 24px;
+        }
+        
+        .logo span {
+            color: #a777e3;
+            font-weight: bold;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .nav-links a.active {
+            color: #a777e3;
+            background-color: rgba(167, 119, 227, 0.1);
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .swipe-container {
+            position: relative;
+            height: 70vh;
+            max-height: 700px;
+            perspective: 1000px;
+        }
+        
+        .job-card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            padding: 30px;
+            transform-style: preserve-3d;
+            transition: all 0.5s;
+            overflow: hidden;
+        }
+        
+        .job-card.swiped-left {
+            transform: translateX(-150%) rotateZ(-30deg);
+            opacity: 0;
+        }
+        
+        .job-card.swiped-right {
+            transform: translateX(150%) rotateZ(30deg);
+            opacity: 0;
+        }
+        
+        .company-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .company-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            background-color: #f0f0f0;
+            margin-right: 15px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .company-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .company-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .job-title {
+            font-size: 18px;
+            color: #555;
+        }
+        
+        .job-details {
+            margin-bottom: 20px;
+        }
+        
+        .job-meta {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        
+        .job-meta-item {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #666;
+            padding: 5px 10px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+        }
+        
+        .job-meta-item span {
+            margin-right: 5px;
+        }
+        
+        .job-desc {
+            color: #444;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            overflow-y: auto;
+            max-height: 250px;
+            padding-right: 10px;
+        }
+        
+        .job-desc h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .job-desc p, .job-desc ul {
+            margin-bottom: 15px;
+        }
+        
+        .job-desc ul {
+            padding-left: 20px;
+        }
+        
+        .job-desc::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .job-desc::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .job-desc::-webkit-scrollbar-thumb {
+            background: #ddd;
+            border-radius: 10px;
+        }
+        
+        .job-desc::-webkit-scrollbar-thumb:hover {
+            background: #ccc;
+        }
+        
+        .swipe-actions {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .swipe-btn {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .swipe-left {
+            background-color: #fd6b6b;
+            color: white;
+        }
+        
+        .swipe-left:hover {
+            background-color: #fc5252;
+            transform: scale(1.1);
+        }
+        
+        .swipe-right {
+            background-color: #26de81;
+            color: white;
+        }
+        
+        .swipe-right:hover {
+            background-color: #20c974;
+            transform: scale(1.1);
+        }
+        
+        .swipe-info {
+            background-color: #4b7bec;
+            color: white;
+        }
+        
+        .swipe-info:hover {
+            background-color: #3867d6;
+            transform: scale(1.1);
+        }
+        
+        .match-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            font-size: 50px;
+            font-weight: bold;
+            color: #26de81;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px 40px;
+            border-radius: 10px;
+            z-index: 10;
+            transition: all 0.3s;
+            opacity: 0;
+        }
+        
+        .match-indicator.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+        
+        .reject-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            font-size: 50px;
+            font-weight: bold;
+            color: #fd6b6b;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px 40px;
+            border-radius: 10px;
+            z-index: 10;
+            transition: all 0.3s;
+            opacity: 0;
+        }
+        
+        .reject-indicator.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+        
+        .job-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .skill-tag {
+            background-color: #f0f0f0;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #555;
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 20px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #777;
+            transition: color 0.3s;
+        }
+        
+        .bottom-nav-item.active {
+            color: #a777e3;
+        }
+        
+        .bottom-nav-icon {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+        
+        .bottom-nav-text {
+            font-size: 12px;
+        }
+        
+        .filters-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+        
+        .no-jobs {
+            display: none;
+            height: 100%;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .no-jobs h2 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .no-jobs p {
+            color: #777;
+            margin-bottom: 20px;
+        }
+        
+        .refresh-btn {
+            background-color: #a777e3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <h1>Job<span>Swipe</span></h1>
+            </div>
+            
+            <div class="nav-links">
+                <a href="swipe.html" class="active">Discover</a>
+                <a href="matches.html">Matches</a>
+                <a href="profile.html">Profile</a>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="swipe-container">
+            <button class="filters-button">
+                <span>🔍</span> Filters
+            </button>
+            
+            <!-- Job cards will be dynamically inserted here -->
+            
+            <div class="match-indicator">
+                MATCH! 🎉
+            </div>
+            
+            <div class="reject-indicator">
+                PASS ✓
+            </div>
+            
+            <div class="no-jobs">
+                <h2>No More Jobs</h2>
+                <p>You've seen all available jobs matching your criteria.</p>
+                <button class="refresh-btn">Refresh Jobs</button>
+            </div>
+        </div>
+        
+        <div class="swipe-actions">
+            <button class="swipe-btn swipe-left" id="rejectBtn">👎</button>
+            <button class="swipe-btn swipe-info" id="infoBtn">ℹ️</button>
+            <button class="swipe-btn swipe-right" id="likeBtn">👍</button>
+        </div>
+    </div>
+    
+    <div class="bottom-nav">
+        <a href="swipe.html" class="bottom-nav-item active">
+            <div class="bottom-nav-icon">🔍</div>
+            <div class="bottom-nav-text">Discover</div>
+        </a>
+        
+        <a href="matches.html" class="bottom-nav-item">
+            <div class="bottom-nav-icon">✓</div>
+            <div class="bottom-nav-text">Matches</div>
+        </a>
+        
+        <a href="profile.html" class="bottom-nav-item">
+            <div class="bottom-nav-icon">👤</div>
+            <div class="bottom-nav-text">Profile</div>
+        </a>
+        
+        <a href="settings.html" class="bottom-nav-item">
+            <div class="bottom-nav-icon">⚙️</div>
+            <div class="bottom-nav-text">Settings</div>
+        </a>
+    </div>
+
+    <script>
+        // Sample job data
+        const jobs = [
+            {
+                id: 1,
+                company: "TechGiant Corp",
+                logo: "TG",
+                title: "Senior Software Engineer",
+                location: "San Francisco, CA",
+                remoteType: "Hybrid",
+                salary: "$120,000 - $160,000",
+                posted: "2 days ago",
+                description: "We're looking for an experienced Software Engineer to join our dynamic team.",
+                requirements: [
+                    "5+ years of experience with JavaScript and modern frameworks",
+                    "Experience with cloud services (AWS, Azure, GCP)",
+                    "Strong problem-solving abilities",
+                    "Bachelor's degree in Computer Science or equivalent"
+                ],
+                about: "TechGiant is a leading technology company focused on building innovative solutions for enterprise clients. Our team is distributed across the globe, working on challenging problems in cloud computing, artificial intelligence, and big data.",
+                skills: ["JavaScript", "React", "Node.js", "AWS", "Docker"]
+            },
+            {
+                id: 2,
+                company: "StartupHub",
+                logo: "SH",
+                title: "Frontend Developer",
+                location: "Remote",
+                remoteType: "Fully Remote",
+                salary: "$90,000 - $110,000",
+                posted: "1 week ago",
+                description: "Join our growing startup and help build beautiful user interfaces for our clients.",
+                requirements: [
+                    "3+ years of experience with HTML, CSS, and JavaScript",
+                    "Proficiency in React or Vue.js",
+                    "Understanding of responsive design principles",
+                    "Portfolio of previous work"
+                ],
+                about: "StartupHub is a fast-growing startup connecting businesses with the tools they need to succeed in the digital landscape. We value creativity, innovation, and work-life balance.",
+                skills: ["HTML", "CSS", "JavaScript", "React", "UI/UX"]
+            },
+            {
+                id: 3,
+                company: "Data Insights Inc.",
+                logo: "DI",
+                title: "Data Scientist",
+                location: "Boston, MA",
+                remoteType: "On-site",
+                salary: "$110,000 - $140,000",
+                posted: "3 days ago",
+                description: "Use your analytical skills to help us uncover insights from complex datasets.",
+                requirements: [
+                    "Masters or PhD in Statistics, Mathematics, Computer Science, or related field",
+                    "Experience with machine learning algorithms",
+                    "Proficiency in Python, R, or similar",
+                    "Knowledge of SQL and database systems"
+                ],
+                about: "Data Insights Inc. specializes in helping businesses leverage their data to make better decisions. We work with clients across healthcare, finance, and retail sectors.",
+                skills: ["Python", "Machine Learning", "SQL", "Data Visualization", "Statistics"]
+            },
+            {
+                id: 4,
+                company: "Creative Solutions",
+                logo: "CS",
+                title: "UX/UI Designer",
+                location: "New York, NY",
+                remoteType: "Hybrid",
+                salary: "$95,000 - $120,000",
+                posted: "5 days ago",
+                description: "Design intuitive and engaging user experiences for our clients' digital products.",
+                requirements: [
+                    "3+ years of experience in UX/UI design",
+                    "Proficiency in Figma, Sketch, or similar tools",
+                    "Understanding of user-centered design principles",
+                    "Portfolio demonstrating your design process"
+                ],
+                about: "Creative Solutions is a design agency focused on creating beautiful, functional digital experiences. We work with startups and established companies to enhance their digital presence.",
+                skills: ["Figma", "Sketch", "User Research", "Wireframing", "Prototyping"]
+            },
+            {
+                id: 5,
+                company: "CloudScale",
+                logo: "CS",
+                title: "DevOps Engineer",
+                location: "Austin, TX",
+                remoteType: "Remote",
+                salary: "$115,000 - $145,000",
+                posted: "1 day ago",
+                description: "Help us build and maintain our cloud infrastructure and deployment pipelines.",
+                requirements: [
+                    "Experience with AWS, Azure, or GCP",
+                    "Knowledge of CI/CD tools like Jenkins, Travis, or CircleCI",
+                    "Familiarity with containerization and orchestration",
+                    "Strong scripting skills (Bash, Python)"
+                ],
+                about: "CloudScale provides cloud infrastructure solutions for businesses of all sizes. We help companies migrate to the cloud and optimize their infrastructure for cost and performance.",
+                skills: ["AWS", "Docker", "Kubernetes", "CI/CD", "Terraform"]
+            }
+        ];
+
+        // Shuffle job array for random order
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+        
+        shuffleArray(jobs);
+        
+        // Current job index
+        let currentJobIndex = 0;
+        
+        // Array to keep track of liked jobs
+        let likedJobs = JSON.parse(localStorage.getItem('likedJobs')) || [];
+        
+        // Create job card
+        function createJobCard(job) {
+            const swipeContainer = document.querySelector('.swipe-container');
+            
+            // Create job card element
+            const jobCard = document.createElement('div');
+            jobCard.className = 'job-card';
+            jobCard.id = `job-${job.id}`;
+            
+            // Create job card content
+            jobCard.innerHTML = `
+                <div class="company-info">
+                    <div class="company-logo">
+                        <span>${job.logo}</span>
+                    </div>
+                    <div>
+                        <div class="company-name">${job.company}</div>
+                        <div class="job-title">${job.title}</div>
+                    </div>
+                </div>
+                
+                <div class="job-details">
+                    <div class="job-meta">
+                        <div class="job-meta-item">
+                            <span>📍</span> ${job.location}
+                        </div>
+                        <div class="job-meta-item">
+                            <span>🏢</span> ${job.remoteType}
+                        </div>
+                        <div class="job-meta-item">
+                            <span>💰</span> ${job.salary}
+                        </div>
+                        <div class="job-meta-item">
+                            <span>🕒</span> Posted ${job.posted}
+                        </div>
+                    </div>
+                    
+                    <div class="job-desc">
+                        <h3>About the Role</h3>
+                        <p>${job.description}</p>
+                        
+                        <h3>Requirements</h3>
+                        <ul>
+                            ${job.requirements.map(req => `<li>${req}</li>`).join('')}
+                        </ul>
+                        
+                        <h3>About the Company</h3>
+                        <p>${job.about}</p>
+                    </div>
+                    
+                    <div class="job-skills">
+                        ${job.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+            
+            swipeContainer.appendChild(jobCard);
+            
+            // Make job card swipeable
+            let startX, moveX;
+            let cardWidth = jobCard.offsetWidth;
+            
+            jobCard.addEventListener('touchstart', function(e) {
+                startX = e.touches[0].clientX;
+            });
+            
+            jobCard.addEventListener('touchmove', function(e) {
+                moveX = e.touches[0].clientX;
+                let offsetX = moveX - startX;
+                let rotate = offsetX * 0.1;
+                
+                jobCard.style.transform = `translateX(${offsetX}px) rotate(${rotate}deg)`;
+                
+                // Add visual feedback based on swipe direction
+                if (offsetX > 50) {
+                    jobCard.style.boxShadow = '0 10px 25px rgba(38, 222, 129, 0.2)';
+                } else if (offsetX < -50) {
+                    jobCard.style.boxShadow = '0 10px 25px rgba(253, 107, 107, 0.2)';
+                } else {
+                    jobCard.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.1)';
+                }
+            });
+            
+            jobCard.addEventListener('touchend', function() {
+                let offsetX = moveX - startX;
+                
+                if (offsetX > 100) {
+                    // Swiped right - like
+                    jobCard.classList.add('swiped-right');
+                    handleLike(job);
+                } else if (offsetX < -100) {
+                    // Swiped left - reject
+                    jobCard.classList.add('swiped-left');
+                    handleReject();
+                } else {
+                    // Reset position
+                    jobCard.style.transform = '';
+                    jobCard.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.1)';
+                }
+            });
+            
+            return jobCard;
+        }
+        
+        // Initialize the first job card
+        function initializeJobs() {
+            if (jobs.length === 0) {
+                document.querySelector('.no-jobs').style.display = 'flex';
+                return;
+            }
+            
+            createJobCard(jobs[currentJobIndex]);
+        }
+        
+        // Handle like action
+        function handleLike(job) {
+            // Show match indicator
+            const matchIndicator = document.querySelector('.match-indicator');
+            matchIndicator.classList.add('show');
+            
+            // Add to liked jobs
+            likedJobs.push(job);
+            localStorage.setItem('likedJobs', JSON.stringify(likedJobs));
+            
+            // Hide indicator after a delay
+            setTimeout(() => {
+                matchIndicator.classList.remove('show');
+                loadNextJob();
+            }, 1500);
+        }
+        
+        // Handle reject action
+        function handleReject() {
+            // Show reject indicator
+            const rejectIndicator = document.querySelector('.reject-indicator');
+            rejectIndicator.classList.add('show');
+            
+            // Hide indicator after a delay
+            setTimeout(() => {
+                rejectIndicator.classList.remove('show');
+                loadNextJob();
+            }, 1000);
+        }
+        
+        // Load next job
+        function loadNextJob() {
+            // Remove current job card
+            const currentCard = document.querySelector('.job-card');
+            if (currentCard) {
+                currentCard.remove();
+            }
+            
+            // Increment index
+            currentJobIndex++;
+            
+            // Check if there are more jobs
+            if (currentJobIndex < jobs.length) {
+                createJobCard(jobs[currentJobIndex]);
+            } else {
+                // No more jobs
+                document.querySelector('.no-jobs').style.display = 'flex';
+            }
+        }
+        
+        // Button event listeners
+        document.getElementById('likeBtn').addEventListener('click', function() {
+            const currentCard = document.querySelector('.job-card');
+            if (currentCard) {
+                currentCard.classList.add('swiped-right');
+                handleLike(jobs[currentJobIndex]);
+            }
+        });
+        
+        document.getElementById('rejectBtn').addEventListener('click', function() {
+            const currentCard = document.querySelector('.job-card');
+            if (currentCard) {
+                currentCard.classList.add('swiped-left');
+                handleReject();
+            }
+        });
+        
+        document.getElementById('infoBtn').addEventListener('click', function() {
+            // Toggle scrollable area for job description
+            const jobDesc = document.querySelector('.job-desc');
+            if (jobDesc) {
+                if (jobDesc.style.maxHeight === '250px' || !jobDesc.style.maxHeight) {
+                    jobDesc.style.maxHeight = '400px';
+                } else {
+                    jobDesc.style.maxHeight = '250px';
+                }
+            }
+        });
+        
+        // Refresh button event listener
+        document.querySelector('.refresh-btn').addEventListener('click', function() {
+            // Reset job index and reshuffle jobs
+            currentJobIndex = 0;
+            shuffleArray(jobs);
+            document.querySelector('.no-jobs').style.display = 'none';
+            initializeJobs();
+        });
+        
+        // Initialize the app
+        initializeJobs();
+    </script>
+</body>
+</html>

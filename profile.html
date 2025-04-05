@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobSwipe - Profile Setup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            min-height: 100vh;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            color: #333;
+            font-size: 24px;
+        }
+        
+        .logo span {
+            color: #a777e3;
+            font-weight: bold;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .profile-setup-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .profile-setup-header h2 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .profile-setup-header p {
+            color: #777;
+            font-size: 16px;
+        }
+        
+        .profile-section {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-header h3 {
+            color: #333;
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        
+        .section-header .section-number {
+            background-color: #a777e3;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        label {
+            display: block;
+            color: #555;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #a777e3;
+            outline: none;
+        }
+        
+        .avatar-upload {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .avatar-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            overflow: hidden;
+            border: 3px solid #ddd;
+        }
+        
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .avatar-preview i {
+            font-size: 40px;
+            color: #aaa;
+        }
+        
+        .file-upload-btn {
+            background-color: #f0f0f0;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .skill-tag {
+            background-color: #f0f0f0;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .skill-tag span {
+            margin-right: 5px;
+        }
+        
+        .skill-tag button {
+            background-color: transparent;
+            border: none;
+            color: #777;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .add-skill-input {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .add-skill-input input {
+            flex: 1;
+        }
+        
+        .add-btn {
+            background-color: #a777e3;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .add-section-btn {
+            background-color: transparent;
+            border: 2px dashed #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            width: 100%;
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        
+        .preference-section {
+            margin-bottom: 20px;
+        }
+        
+        .preference-section h4 {
+            margin-bottom: 15px;
+            color: #444;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .checkbox-item input {
+            margin-right: 5px;
+        }
+        
+        .range-slider {
+            margin-top: 10px;
+        }
+        
+        .range-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 12px;
+            color: #777;
+        }
+        
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .save-btn {
+            background-color: #a777e3;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .save-btn:hover {
+            background-color: #9366d6;
+        }
+        
+        .skip-btn {
+            background-color: transparent;
+            border: 1px solid #ddd;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 16px;
+            color: #777;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <h1>Job<span>Swipe</span></h1>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="profile-setup-header">
+            <h2>Complete Your Profile</h2>
+            <p>Help us match you with the perfect jobs</p>
+        </div>
+        
+        <form id="profileForm">
+            <div class="profile-section">
+                <div class="section-header">
+                    <div class="section-number">1</div>
+                    <h3>Personal Information</h3>
+                </div>
+                
+                <div class="avatar-upload">
+                    <div class="avatar-preview" id="avatarPreview">
+                        <span>📷</span>
+                    </div>
+                    <input type="file" id="avatarUpload" accept="image/*" style="display: none;">
+                    <button type="button" class="file-upload-btn" onclick="document.getElementById('avatarUpload').click()">Upload Photo</button>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location">Location</label>
+                        <input type="text" id="location" name="location" placeholder="City, State">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="profile-section">
+                <div class="section-header">
+                    <div class="section-number">2</div>
+                    <h3>Professional Information</h3>
+                </div>
+                
+                <div class="form-group">
+                    <label for="title">Professional Title</label>
+                    <input type="text" id="title" name="title" placeholder="e.g., Senior Software Engineer">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="experience">Years of Experience</label>
+                        <select id="experience" name="experience">
+                            <option value="">Select Experience</option>
+                            <option value="0-1">Less than 1 year</option>
+                            <option value="1-3">1-3 years</option>
+                            <option value="3-5">3-5 years</option>
+                            <option value="5-10">5-10 years</option>
+                            <option value="10+">10+ years</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="education">Highest Education</label>
+                        <select id="education" name="education">
+                            <option value="">Select Education</option>
+                            <option value="high-school">High School</option>
+                            <option value="associate">Associate Degree</option>
+                            <option value="bachelor">Bachelor's Degree</option>
+                            <option value="master">Master's Degree</option>
+                            <option value="phd">Ph.D. or Doctorate</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="skills">Skills</label>
+                    <div class="add-skill-input">
+                        <input type="text" id="skillInput" placeholder="Add a skill">
+                        <button type="button" id="addSkillBtn" class="add-btn">Add</button>
+                    </div>
+                    <div class="skill-tags" id="jobTitleTags">
+                            <!-- Job titles will be added here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="preference-section">
+                    <h4>Salary Range</h4>
+                    <div class="form-group">
+                        <input type="range" id="salaryRange" min="30000" max="200000" step="5000" value="60000">
+                        <div class="range-labels">
+                            <span>$30,000</span>
+                            <span id="salaryValue">$60,000</span>
+                            <span>$200,000+</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="preference-section">
+                    <h4>Job Type</h4>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="fullTime" name="jobType" value="fullTime" checked>
+                            <label for="fullTime">Full-time</label>
+                        </div>
+                        
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="partTime" name="jobType" value="partTime">
+                            <label for="partTime">Part-time</label>
+                        </div>
+                        
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="contract" name="jobType" value="contract">
+                            <label for="contract">Contract</label>
+                        </div>
+                        
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="temporary" name="jobType" value="temporary">
+                            <label for="temporary">Temporary</label>
+                        </div>
+                        
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="internship" name="jobType" value="internship">
+                            <label for="internship">Internship</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="preference-section">
+                    <h4>Work Environment</h4>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="remote" name="workEnvironment" value="remote" checked>
+                            <label for="remote">Remote</label>
+                        </div>
+                        
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="hybrid" name="workEnvironment" value="hybrid" checked>
+                            <label for="hybrid">Hybrid</label>
+                        </div>
+                        
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="onsite" name="workEnvironment" value="onsite">
+                            <label for="onsite">On-site</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="preference-section">
+                    <h4>Industry Preferences</h4>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="tech" name="industry" value="tech">
+                            <label for="tech">Technology</label>
+                        </div>
+                        
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="healthcare" name="industry" value="healthcare">
+                            <label for="healthcare">Healthcare</label>
+                        </div>
+                        
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="finance" name="industry" value="finance">
+                            <label for="finance">Finance</label>
+                        </div>
+                        
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="education" name="industry" value="education">
+                            <label for="education">Education</label>
+                        </div>
+                        
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="government" name="industry" value="government">
+                            <label for="government">Government</label>
+                        </div>
+                        
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="retail" name="industry" value="retail">
+                            <label for="retail">Retail</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="btn-group">
+                <button type="button" class="skip-btn">Skip for Now</button>
+                <button type="submit" class="save-btn">Save & Continue</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Get stored user data if available
+        const firstName = localStorage.getItem('firstName') || '';
+        const lastName = localStorage.getItem('lastName') || '';
+        const email = localStorage.getItem('username') || '';
+        
+        // Fill in form with stored data
+        document.getElementById('firstName').value = firstName;
+        document.getElementById('lastName').value = lastName;
+        document.getElementById('email').value = email;
+        
+        // Skills array
+        let skills = [];
+        
+        // Job titles array
+        let jobTitles = [];
+        
+        // Handle avatar upload
+        const avatarUpload = document.getElementById('avatarUpload');
+        const avatarPreview = document.getElementById('avatarPreview');
+        
+        avatarUpload.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    avatarPreview.innerHTML = `<img src="${e.target.result}" alt="Avatar">`;
+                    // Store avatar in localStorage (in a real app, would upload to server)
+                    localStorage.setItem('avatar', e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Restore avatar if exists
+        const savedAvatar = localStorage.getItem('avatar');
+        if (savedAvatar) {
+            avatarPreview.innerHTML = `<img src="${savedAvatar}" alt="Avatar">`;
+        }
+        
+        // Add skill
+        document.getElementById('addSkillBtn').addEventListener('click', function() {
+            const skillInput = document.getElementById('skillInput');
+            const skillValue = skillInput.value.trim();
+            
+            if (skillValue && !skills.includes(skillValue)) {
+                skills.push(skillValue);
+                renderSkills();
+                skillInput.value = '';
+            }
+        });
+        
+        // Render skills
+        function renderSkills() {
+            const skillTagsContainer = document.getElementById('skillTags');
+            skillTagsContainer.innerHTML = '';
+            
+            skills.forEach((skill, index) => {
+                const tag = document.createElement('div');
+                tag.className = 'skill-tag';
+                tag.innerHTML = `
+                    <span>${skill}</span>
+                    <button type="button" data-index="${index}">×</button>
+                `;
+                skillTagsContainer.appendChild(tag);
+            });
+            
+            // Add remove skill event
+            const removeButtons = skillTagsContainer.querySelectorAll('button');
+            removeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = this.getAttribute('data-index');
+                    skills.splice(index, 1);
+                    renderSkills();
+                });
+            });
+        }
+        
+        // Add job title
+        document.getElementById('addJobTitleBtn').addEventListener('click', function() {
+            const jobTitleInput = document.getElementById('jobTitleInput');
+            const jobTitleValue = jobTitleInput.value.trim();
+            
+            if (jobTitleValue && !jobTitles.includes(jobTitleValue)) {
+                jobTitles.push(jobTitleValue);
+                renderJobTitles();
+                jobTitleInput.value = '';
+            }
+        });
+        
+        // Render job titles
+        function renderJobTitles() {
+            const jobTitleTagsContainer = document.getElementById('jobTitleTags');
+            jobTitleTagsContainer.innerHTML = '';
+            
+            jobTitles.forEach((title, index) => {
+                const tag = document.createElement('div');
+                tag.className = 'skill-tag';
+                tag.innerHTML = `
+                    <span>${title}</span>
+                    <button type="button" data-index="${index}">×</button>
+                `;
+                jobTitleTagsContainer.appendChild(tag);
+            });
+            
+            // Add remove job title event
+            const removeButtons = jobTitleTagsContainer.querySelectorAll('button');
+            removeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = this.getAttribute('data-index');
+                    jobTitles.splice(index, 1);
+                    renderJobTitles();
+                });
+            });
+        }
+        
+        // Salary range display
+        const salaryRange = document.getElementById('salaryRange');
+        const salaryValue = document.getElementById('salaryValue');
+        
+        salaryRange.addEventListener('input', function() {
+            salaryValue.textContent = 'tags" id="skillTags">
+                        <!-- Skills will be added here dynamically -->
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="about">About Me</label>
+                    <textarea id="about" name="about" rows="4" placeholder="A brief description about yourself and your professional background"></textarea>
+                </div>
+            </div>
+            
+            <div class="profile-section">
+                <div class="section-header">
+                    <div class="section-number">3</div>
+                    <h3>Job Preferences</h3>
+                </div>
+                
+                <div class="preference-section">
+                    <h4>Desired Job Titles</h4>
+                    <div class="form-group">
+                        <div class="add-skill-input">
+                            <input type="text" id="jobTitleInput" placeholder="e.g., Software Engineer">
+                            <button type="button" id="addJobTitleBtn" class="add-btn">Add</button>
+                        </div>
+                        <div class="skill- + parseInt(this.value).toLocaleString();
+        });
+        
+        // Form submission
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const profile = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                location: document.getElementById('location').value,
+                title: document.getElementById('title').value,
+                experience: document.getElementById('experience').value,
+                education: document.getElementById('education').value,
+                skills: skills,
+                about: document.getElementById('about').value,
+                jobTitles: jobTitles,
+                salary: document.getElementById('salaryRange').value,
+                jobTypes: Array.from(document.querySelectorAll('input[name="jobType"]:checked')).map(el => el.value),
+                workEnvironments: Array.from(document.querySelectorAll('input[name="workEnvironment"]:checked')).map(el => el.value),
+                industries: Array.from(document.querySelectorAll('input[name="industry"]:checked')).map(el => el.value)
+            };
+            
+            // Save to localStorage
+            localStorage.setItem('userProfile', JSON.stringify(profile));
+            localStorage.setItem('hasProfile', 'true');
+            
+            // Redirect to swipe page
+            window.location.href = 'swipe.html';
+        });
+        
+        // Skip button
+        document.querySelector('.skip-btn').addEventListener('click', function() {
+            localStorage.setItem('hasProfile', 'true');
+            window.location.href = 'swipe.html';
+        });
+    </script>
+</body>
+</html>tags" id="skillTags">
+                        <!-- Skills will be added here dynamically -->
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="about">About Me</label>
+                    <textarea id="about" name="about" rows="4" placeholder="A brief description about yourself and your professional background"></textarea>
+                </div>
+            </div>
+            
+            <div class="profile-section">
+                <div class="section-header">
+                    <div class="section-number">3</div>
+                    <h3>Job Preferences</h3>
+                </div>
+                
+                <div class="preference-section">
+                    <h4>Desired Job Titles</h4>
+                    <div class="form-group">
+                        <div class="add-skill-input">
+                            <input type="text" id="jobTitleInput" placeholder="e.g., Software Engineer">
+                            <button type="button" id="addJobTitleBtn" class="add-btn">Add</button>
+                        </div>
+                        <div class="skill-

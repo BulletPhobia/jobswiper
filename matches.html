@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobSwipe - Your Matches</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            color: #333;
+            font-size: 24px;
+        }
+        
+        .logo span {
+            color: #a777e3;
+            font-weight: bold;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .nav-links a.active {
+            color: #a777e3;
+            background-color: rgba(167, 119, 227, 0.1);
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .page-title {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 28px;
+        }
+        
+        .matches-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .match-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s;
+        }
+        
+        .match-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .company-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            background-color: #f0f0f0;
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #555;
+            font-size: 20px;
+        }
+        
+        .match-info {
+            flex: 1;
+        }
+        
+        .company-name {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .job-title {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        
+        .job-meta {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .job-meta-item {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .job-meta-item span {
+            margin-right: 5px;
+        }
+        
+        .match-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .match-btn {
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border: none;
+        }
+        
+        .view-btn {
+            background-color: #f0f0f0;
+            color: #555;
+        }
+        
+        .view-btn:hover {
+            background-color: #e5e5e5;
+        }
+        
+        .apply-btn {
+            background-color: #a777e3;
+            color: white;
+        }
+        
+        .apply-btn:hover {
+            background-color: #9366d6;
+        }
+        
+        .match-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+        
+        .status-new {
+            background-color: #26de81;
+            color: white;
+        }
+        
+        .status-applied {
+            background-color: #4b7bec;
+            color: white;
+        }
+        
+        .status-interviewing {
+            background-color: #f7b731;
+            color: white;
+        }
+        
+        .empty-matches {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 50px 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .empty-matches h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .empty-matches p {
+            color: #777;
+            margin-bottom: 20px;
+            max-width: 400px;
+        }
+        
+        .swipe-now-btn {
+            background-color: #a777e3;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .swipe-now-btn:hover {
+            background-color: #9366d6;
+        }
+        
+        .filter-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .filter-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .filter-btn {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn.active {
+            background-color: #a777e3;
+            color: white;
+            border-color: #a777e3;
+        }
+        
+        .sort-dropdown {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 14px;
+            background-color: white;
+        }
+        
+        .match-date {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 20px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #777;
+            transition: color 0.3s;
+        }
+        
+        .bottom-nav-item.active {
+            color: #a777e3;
+        }
+        
+        .bottom-nav-icon {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+        
+        .bottom-nav-text {
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <h1>Job<span>Swipe</span></h1>
+            </div>
+            
+            <div class="nav-links">
+                <a href="swipe.html">Discover</a>
+                <a href="matches.html" class="active">Matches</a>
+                <a href="profile.html">Profile</a>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <h1 class="page-title">Your Matches</h1>
+        
+        <div class="filter-container">
+            <div class="filter-group">
+                <button class="filter-btn active">All</button>
+                <button class="filter-btn">New</button>
+                <button class="filter-btn">Applied</button>
+                <button class="filter-btn">Interviewing</button>
+            </div>
+            
+            <select class="sort-dropdown">
+                <option value="recent">Most Recent</option>
+                <option value="company">Company Name</option>
+                <option value="salary-high">Salary: High to Low</option>
+                <option value="salary-low">Salary: Low to High</option>
+            </select>
+        </div>
+        
+        <div id="matchesList" class="matches-list">
+            <!-- Matches will be dynamically added here -->
+        </div>
+        
+        <div id="emptyMatches" class="empty-matches" style="display: none;">
+            <h2>No Matches Yet</h2>
+            <p>Start swiping to find your perfect job match!</p>
+            <a href="swipe.html" class="swipe-now-btn">Start Swiping</a>
+        </div>
+    </div>
+    
+    <div class="bottom-nav">
+        <a href="swipe.html" class="bottom-nav-item">
+            <div class="bottom-nav-icon">🔍</div>
+            <div class="bottom-nav-text">Discover</div>
+        </a>
+        
+        <a href="matches.html" class="bottom-nav-item active">
+            <div class="bottom-nav-icon">✓</div>
+            <div class="bottom-nav-text">Matches</div>
+        </a>
+        
+        <a href="profile.html" class="bottom-nav-item">
+            <div class="bottom-nav-icon">👤</div>
+            <div class="bottom-nav-text">Profile</div>
+        </a>
+        
+        <a href="settings.html" class="bottom-nav-item">
+            <div class="bottom-nav-icon">⚙️</div>
+            <div class="bottom-nav-text">Settings</div>
+        </a>
+    </div>
+
+    <script>
+        // Get liked jobs from localStorage
+        const likedJobs = JSON.parse(localStorage.getItem('likedJobs')) || [];
+        
+        // Reference to matches list and empty matches container
+        const matchesList = document.getElementById('matchesList');
+        const emptyMatches = document.getElementById('emptyMatches');
+        
+        // Sample statuses for demo
+        const statuses = ['New', 'Applied', 'Interviewing'];
+        
+        // Function to create a match card
+        function createMatchCard(job) {
+            // Generate a random status for demo purposes
+            const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+            
+            // Generate a random match date for demo purposes
+            const days = Math.floor(Math.random() * 10) + 1;
+            const matchDate = `Matched ${days} day${days > 1 ? 's' : ''} ago`;
+            
+            // Create card element
+            const card = document.createElement('div');
+            card.className = 'match-card';
+            
+            // Create card content
+            card.innerHTML = `
+                <div class="company-logo">${job.logo}</div>
+                
+                <div class="match-info">
+                    <div class="company-name">
+                        ${job.company}
+                        <span class="match-status status-${randomStatus.toLowerCase()}">${randomStatus}</span>
+                    </div>
+                    
+                    <div class="job-title">${job.title}</div>
+                    
+                    <div class="job-meta">
+                        <div class="job-meta-item">
+                            <span>📍</span> ${job.location}
+                        </div>
+                        
+                        <div class="job-meta-item">
+                            <span>💰</span> ${job.salary}
+                        </div>
+                    </div>
+                    
+                    <div class="match-date">${matchDate}</div>
+                </div>
+                
+                <div class="match-actions">
+                    <button class="match-btn view-btn">View</button>
+                    <button class="match-btn apply-btn">Apply Now</button>
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        // Initialize matches list
+        function initializeMatches() {
+            if (likedJobs.length === 0) {
+                // Show empty state
+                matchesList.style.display = 'none';
+                emptyMatches.style.display = 'flex';
+                return;
+            }
+            
+            // Show matches list and hide empty state
+            matchesList.style.display = 'flex';
+            emptyMatches.style.display = 'none';
+            
+            // Clear any existing matches
+            matchesList.innerHTML = '';
+            
+            // Add match cards
+            likedJobs.forEach(job => {
+                const card = createMatchCard(job);
+                matchesList.appendChild(card);
+            });
+        }
+        
+        // Filter button event listeners
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // In a real app, filter matches based on selection
+                // For demo, just reinitialize all matches
+                initializeMatches();
+            });
+        });
+        
+        // Sort dropdown event listener
+        document.querySelector('.sort-dropdown').addEventListener('change', function() {
+            // In a real app, sort matches based on selection
+            // For demo, just reinitialize all matches
+            initializeMatches();
+        });
+        
+        // Initialize the matches list
+        initializeMatches();
+        
+        // Handle view and apply buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('view-btn')) {
+                // In a real app, navigate to job details page
+                alert('Viewing job details...');
+            } else if (e.target.classList.contains('apply-btn')) {
+                // In a real app, open application form
+                alert('Opening application form...');
+            }
+        });
+    </script>
+</body>
+</html>
